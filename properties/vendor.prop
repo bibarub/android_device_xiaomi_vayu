@@ -77,12 +77,15 @@ ro.crypto.volume.metadata.method=dm-default-key
 dalvik.vm.dex2oat64.enabled=true
 
 # Display
+ro.surface_flinger.use_color_management=true
 ro.vendor.display.ad=1
 ro.vendor.display.ad.sdr_calib_data=/vendor/etc/sdr_config.cfg
 ro.vendor.display.ad.hdr_calib_data=/vendor/etc/hdr_config.cfg
 ro.vendor.display.sensortype=2
 vendor.display.idle_time=0
 vendor.display.idle_time_inactive=0
+vendor.display.qdcm.disable_factory_mode=1
+vendor.display.qdcm.mode_combine=1
 
 # DRM
 drm.service.enabled=true
