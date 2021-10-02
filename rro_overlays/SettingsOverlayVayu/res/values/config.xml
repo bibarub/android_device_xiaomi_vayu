@@ -23,4 +23,7 @@
 
     <!-- Device specific doze package -->
     <string name="config_customDozePackage">org.lineageos.settings/org.lineageos.settings.doze.DozeSettingsActivity</string>
+
+    <!-- Smart charging/cutoff -->
+    <bool name="config_supportSmartFeatures">false</bool>
 </resources>
