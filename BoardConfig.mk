@@ -55,6 +55,9 @@ TARGET_DISABLED_UBWC := true
 # Camera
 MALLOC_SVELTE := true
 
+# Charger
+WITH_LINEAGE_CHARGER := true
+
 # Filesystem
 TARGET_FS_CONFIG_GEN := $(DEVICE_PATH)/configs/config.fs
 
