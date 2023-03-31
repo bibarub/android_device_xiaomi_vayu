@@ -28,3 +28,8 @@ PRODUCT_BUILD_PROP_OVERRIDES += \
     PRODUCT_MODEL=M2102J20SI
 
 BUILD_FINGERPRINT := Xiaomi/vayu_global/vayu:12/RKQ1.200826.002/V13.0.5.0.SJUMIXM:user/release-keys
+
+# Inherit ih8sn (to pass CTS profile)
+ifneq ($(TARGET_BUILD_TYPE),user)
+$(call inherit-product, device/xiaomi/vayu/ih8sn/ih8sn.mk)
+endif
