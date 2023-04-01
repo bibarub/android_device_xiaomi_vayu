@@ -122,6 +122,10 @@ PRODUCT_PACKAGES += \
 PRODUCT_PACKAGES += \
     libsuspend
 
+PRODUCT_COPY_FILES += \
+    $(LOCAL_PATH)/rootdir/etc/dumb_battery_workaround.rc:$(TARGET_COPY_OUT_SYSTEM)/etc/init/dumb_battery_workaround.rc \
+    $(LOCAL_PATH)/rootdir/bin/dumb_battery_workaround.sh:$(TARGET_COPY_OUT_SYSTEM)/bin/dumb_battery_workaround.sh
+
 # Config Store
 PRODUCT_PACKAGES += \
     disable_configstore
