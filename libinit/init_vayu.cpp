@@ -48,11 +48,13 @@ using std::string;
 
 std::vector<std::string> ro_props_default_source_order = {
     "",
+    "bootimage.",
     "odm.",
     "product.",
     "system.",
     "system_ext.",
     "vendor.",
+    "vendor_dlkm."
 };
 
 void property_override(char const prop[], char const value[], bool add = true) {
@@ -87,8 +89,9 @@ void load_dalvik_properties() {
     property_override("dalvik.vm.heapminfree", "8m");
 }
 
-void set_device_props(const std::string brand, const std::string device, const std::string model,
-        const std::string name, const std::string marketname) {
+void set_device_props(const std::string device, const std::string model,
+                      const std::string name, const std::string marketname,
+                      const std::string fingerprint) {
     const auto set_ro_product_prop = [](const std::string &source,
                                         const std::string &prop,
                                         const std::string &value) {
@@ -96,12 +99,19 @@ void set_device_props(const std::string brand, const std::string device, const s
         property_override(prop_name.c_str(), value.c_str(), true);
     };
 
+    const auto set_ro_build_prop = [](const std::string &source,
+                                        const std::string &prop,
+                                        const std::string &value) {
+        auto prop_name = "ro." + source + "build." + prop;
+        property_override(prop_name.c_str(), value.c_str(), true);
+    };
+
     for (const auto &source : ro_props_default_source_order) {
-        set_ro_product_prop(source, "brand", brand);
         set_ro_product_prop(source, "device", device);
         set_ro_product_prop(source, "model", model);
         set_ro_product_prop(source, "name", name);
         set_ro_product_prop(source, "marketname", marketname);
+        set_ro_build_prop(source, "fingerprint", fingerprint);
     }
 }
 
@@ -109,28 +119,23 @@ void vendor_load_properties() {
     string region = android::base::GetProperty("ro.boot.hwc", "");
 
     if (region == "INDIA") {
-        set_device_props(
-            "POCO", "bhima", "M2102J20SI", "bhima_global", "POCO X3 Pro");
-        property_override("ro.product.mod_device", "bhima_global");
+        set_device_props("bhima", "M2102J20SI", "bhima_in", "POCO X3 Pro",
+                         "POCO/bhima_in/bhima:11/RKQ1.200826.002/V12.0.4.0.RJUINXM:user/release-keys");
+        property_override("ro.build.description", "bhima_in-user 11 RKQ1.200826.002 V12.0.4.0.RJUINXM release-keys");
+        property_override("ro.product.mod_device", "bhima_in");
     } else {
-        set_device_props(
-            "POCO", "vayu", "M2102J20SG", "vayu_global", "POCO X3 Pro");
+        set_device_props("vayu", "M2102J20SG", "vayu_global", "POCO X3 Pro",
+                         "POCO/vayu_global/vayu:11/RKQ1.200826.002/V12.0.4.0.RJUMIXM:user/release-keys");
+        property_override("ro.build.description", "vayu_global-user 11 RKQ1.200826.002 V12.0.4.0.RJUMIXM release-keys");
         property_override("ro.product.mod_device", "vayu_global");
     }
 
     load_dalvik_properties();
 
-//  SafetyNet workaround
-    property_override("ro.boot.verifiedbootstate", "green");
-//  Enable transitional log for Privileged permissions
-    property_override("ro.control_privapp_permissions", "log");
+    property_override("ro.build.version.security_patch", "2021-03-01");
 
-#ifdef __ANDROID_RECOVERY__
-    std::string buildtype = GetProperty("ro.build.type", "userdebug");
-    if (buildtype != "user") {
-        property_override("ro.debuggable", "1");
-        property_override("ro.adb.secure.recovery", "0");
-    }
+#ifndef __ANDROID_RECOVERY__
+    property_override("ro.boot.verifiedbootstate", "green");
 #endif
 }
 
