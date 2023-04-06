@@ -17,9 +17,6 @@ genfscon sysfs /devices/platform/soc/soc:fingerprint_fpc/power_cfg              
 genfscon sysfs /devices/platform/soc/soc:fingerprint_fpc/request_vreg                u:object_r:vendor_sysfs_fingerprint:s0
 genfscon sysfs /devices/platform/soc/soc:fingerprint_fpc/wakeup_enable               u:object_r:vendor_sysfs_fingerprint:s0
 
-# Power
-genfscon proc /sys/kernel/sched_energy_aware                                         u:object_r:proc_sched_energy_aware:s0
-
 # Extcon sysfs
 genfscon sysfs /devices/platform/soc/soc:qcom,msm-ext-disp/extcon                                                                                  u:object_r:sysfs_extcon:s0
 genfscon sysfs /devices/platform/soc/88e0000.qcom,msm-eud/extcon                                                                                   u:object_r:sysfs_extcon:s0
