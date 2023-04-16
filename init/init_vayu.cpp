@@ -65,10 +65,12 @@ void set_ro_build_prop(const string &source, const string &prop,
 }
 
 void set_device_props(const string brand, const string device,
-			const string model, const string name) {
+                      const string model, const string name,
+                      const string fingerprint, const string description) {
     // list of partitions to override props
     string source_partitions[] = { "", "bootimage.", "odm.", "product.",
-                                   "system.", "system_ext.", "vendor." };
+                                   "system.", "system_ext.", "vendor.",
+                                   "vendor_dlkm." };
 
     for (const string &source : source_partitions) {
         set_ro_build_prop(source, "brand", brand, true);
@@ -76,6 +78,8 @@ void set_device_props(const string brand, const string device,
         set_ro_build_prop(source, "product", device, false);
         set_ro_build_prop(source, "model", model, true);
         set_ro_build_prop(source, "name", name, true);
+        set_ro_build_prop(source, "fingerprint", fingerprint, false);
+        set_ro_build_prop(source, "description", description, false);
     }
 }
 
@@ -85,11 +89,23 @@ void vendor_load_properties()
      * Detect device and configure properties
      */
     if (GetProperty("ro.boot.hwc", "") == "INDIA") {
-        set_device_props("POCO", "bhima", "M2102J20SI", "bhima_global");
+        set_device_props("POCO", "bhima", "M2102J20SI", "bhima_global",
+                         "POCO/bhima_global/bhima:11/RKQ1.200826.002/V12.0.4.0.RJUMIXM:user/release-keys",
+                         "bhima_global-user 11 RKQ1.200826.002 V12.0.4.0.RJUMIXM release-keys");
+        property_override("ro.product.mod_device", "bhima_global");
     } else {
-        set_device_props("POCO", "vayu", "M2102J20SG", "vayu_global");
+        set_device_props("POCO", "vayu", "M2102J20SG", "vayu_global",
+                         "POCO/vayu_global/vayu:11/RKQ1.200826.002/V12.0.4.0.RJUMIXM:user/release-keys",
+                         "vayu_global-user 11 RKQ1.200826.002 V12.0.4.0.RJUMIXM release-keys");
+        property_override("ro.product.mod_device", "vayu_global");
     }
 
     // Set hardware revision
     property_override("ro.boot.hardware.revision", GetProperty("ro.boot.hwversion", "").c_str());
+
+    // SafetyNet
+    property_override("ro.build.version.security_patch", "2021-03-01");
+    #ifndef __ANDROID_RECOVERY__
+    property_override("ro.boot.verifiedbootstate", "green");
+    #endif
 }
